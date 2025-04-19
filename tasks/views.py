@@ -29,10 +29,15 @@ class TaskReportView(generics.RetrieveAPIView):
 
     def get_object(self):
         task = Task.objects.get(pk=self.kwargs['pk'])
+
         if task.status != "completed":
             raise PermissionDenied("Task not yet completed.")
-        if self.request.user.role not in ["admin", "superadmin"]:
+        user = self.request.user
+        if not (
+                user.is_superuser or user.is_staff or
+                user.groups.filter(name__in=["Admin", "SuperAdmin"]).exists()
+        ):
             raise PermissionDenied(
-                "Only admins and superadmins can view reports."
+                "Only Admins and SuperAdmins can view reports."
             )
         return task

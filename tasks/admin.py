@@ -27,21 +27,22 @@ class TaskAdminForm(forms.ModelForm):
 
 class TaskAdmin(admin.ModelAdmin):
     form = TaskAdminForm
-    list_display = ("title", "assigned_to", "get_user_role", "status")
+
+    def get_user_groups(self, obj):
+        return ", ".join([group.name for group in obj.assigned_to.groups.all()])
+
+    get_user_groups.short_description = "User Role"
+
+    list_display = ("title", "assigned_to", "status")
     list_filter = ("status", "due_date", "assigned_to")
     search_fields = ("title", "description", "assigned_to__username")
     readonly_fields = ["completion_report", "worked_hours"]
 
-    def get_user_role(self, obj):
-        return obj.assigned_to.role
-
-    get_user_role.short_description = "User Role"
-
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
-    list_display = ("username", "role", "is_staff", "is_superuser")
-    fieldsets = UserAdmin.fieldsets + ((None, {'fields': ('role',)}),)
+    list_display = ("username", "is_staff", "is_superuser")
+    fieldsets = UserAdmin.fieldsets
 
 
 admin.site.register(CustomUser, CustomUserAdmin)

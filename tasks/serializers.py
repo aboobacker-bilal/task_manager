@@ -8,6 +8,9 @@ class TaskSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ["assigned_to", "completion_report", "worked_hours"]
 
+    def get_user_roles(self, obj):
+        return [group.name for group in obj.assigned_to.groups.all()]
+
 
 class TaskUpdateSerializer(serializers.ModelSerializer):
     class Meta:
