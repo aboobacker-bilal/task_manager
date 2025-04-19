@@ -9,7 +9,10 @@ class UserTaskList(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Task.objects.filter(assigned_to=self.request.user)
+        user = self.request.user
+        if user.is_superuser:
+            return Task.objects.all()
+        return Task.objects.filter(assigned_to=user)
 
 
 class UserTaskUpdate(generics.UpdateAPIView):
