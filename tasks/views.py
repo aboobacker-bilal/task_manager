@@ -46,7 +46,6 @@ class TaskReportView(generics.RetrieveAPIView):
 
 
 @login_required
-@login_required
 def admin_dashboard(request):
     if request.user.role == 'admin':
         tasks = Task.objects.filter(assigned_to__admin=request.user)
