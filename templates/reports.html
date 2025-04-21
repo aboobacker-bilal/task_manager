@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .dashboard-container {
+        max-width: 700px;
+        margin: auto;
+        padding: 20px;
+        background-color: #f4f8fc;
+        border-radius: 10px;
+        font-family: Arial, sans-serif;
+    }
+    .dashboard-container h1, h2 {
+        text-align: center;
+        color: #2c3e50;
+    }
+    ul.task-list {
+        list-style: none;
+        padding: 0;
+    }
+    ul.task-list li {
+        background: #fff;
+        padding: 12px;
+        margin: 10px 0;
+        border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    ul.task-list li a {
+        text-decoration: none;
+        color: #2980b9;
+        font-weight: bold;
+    }
+</style>
+
+<div class="dashboard-container">
+    <h1>Admin Dashboard</h1>
+    <p>Welcome, {{ user.username }}. You are logged in as {{ user.get_role_display }}</p>
+
+    <h2>All Tasks</h2>
+    <ul class="task-list">
+        {% for task in tasks %}
+            <li>
+                <a href="{% url 'task-report' task.id %}">{{ task.title }} - Status: {{ task.get_status_display }}</a>
+            </li>
+        {% empty %}
+            <li>No tasks available.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
